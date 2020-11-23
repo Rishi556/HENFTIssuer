@@ -1,0 +1,16 @@
+{
+  "name": "hive-engine-nft-issuer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "rishi556",
+  "license": "MIT",
+  "dependencies": {
+    "@hiveio/hive-js": "^0.8.10",
+    "jest": "^26.6.3"
+  }
+}
