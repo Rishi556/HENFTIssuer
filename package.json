@@ -2,7 +2,7 @@
   "name": "hive-engine-nft-issuer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "Issuer.js",
   "scripts": {
     "test": "jest"
   },

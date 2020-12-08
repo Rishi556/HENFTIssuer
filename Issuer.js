@@ -18,10 +18,10 @@ class Issuer {
 
     /**
      * Constructor
-     * @param nodesToUse {Array<String>} Array of nodes to use
-     * @param errorCountToSwitch {Number} Integer of how many errors to switch after
-     * @param username {String} Username of issuing account
-     * @param privateActiveKey {String} Private Active Key of issuing account
+     * @param {Array<String>} nodesToUse Array of nodes to use
+     * @param {Number} errorCountToSwitch Integer of how many errors to switch after
+     * @param {String} username Username of issuing account
+     * @param {String} privateActiveKey Private Active Key of issuing account
      * @returns {boolean} If initialized
      * @throws {Error} Throws error if any error
      */
@@ -80,7 +80,7 @@ class Issuer {
 
     /**
      * Issues NFTs
-     * @param instances {Object} Array of objects with keys:  symbol, to, feeSymbol, properties
+     * @param {Array<NFTInstance>} instances Array of NFTInstances
      * @throws {Error} Error
      */
     issueNFTs(instances) {
@@ -88,25 +88,18 @@ class Issuer {
         if (instances.length === 0) {
             throw new Error("instances cannot be empty.");
         }
+        let instancesFormatted = [];
         for (let i in instances) {
             let nft = instances[i];
-            if (nft.symbol === null || nft.symbol === "") {
-                throw new Error("symbol can't be blank.");
+            if (typeof nft !== "NFTInstance"){
+                throw new Error("instances should have all NFTInstances");
             }
-            if (nft.to === null || nft.to === "") {
-                throw new Error("to can't be blank.");
-            }
-            if (nft.feeSymbol === null || nft.feeSymbol === "") {
-                throw new Error("feeSymbol can't be blank.");
-            }
-            if (nft.properties === null || typeof nft.properties !== "object") {
-                throw new Error("properties can't be blank.");
-            }
+            instancesFormatted.push(nft.getObjectForm());
         }
         let sendJSON = {
             "contractName": "nft",
             "contractAction": "issueMultiple",
-            "contractPayload": {"instances": instances}
+            "contractPayload": {"instances": instancesFormatted}
         };
         this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, "ssc-mainnet-hive", JSON.stringify(sendJSON), (err, result) => {
             if (err) {
@@ -117,5 +110,6 @@ class Issuer {
         })
     }
 }
+
 
 module.exports = Issuer;
