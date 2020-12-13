@@ -94,7 +94,7 @@ class Issuer {
             try {
                 instancesFormatted.push(nft.getObjectForm());
             } catch(err){
-                throw(err);
+                throw new Error(err);
             }
             
         }
