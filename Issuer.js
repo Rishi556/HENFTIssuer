@@ -91,10 +91,12 @@ class Issuer {
         let instancesFormatted = [];
         for (let i in instances) {
             let nft = instances[i];
-            if (typeof nft !== "NFTInstance"){
-                throw new Error("instances should have all NFTInstances");
+            try {
+                instancesFormatted.push(nft.getObjectForm());
+            } catch(err){
+                throw(err);
             }
-            instancesFormatted.push(nft.getObjectForm());
+            
         }
         let sendJSON = {
             "contractName": "nft",
