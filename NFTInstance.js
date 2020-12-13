@@ -58,7 +58,12 @@ class NFTInstance {
     }
 
     getObjectForm(){
-        return {symbol,to,feeSymbol,properties};
+        let formed = {}
+        formed.symbol = this.#symbol;
+        formed.to = this.#to;
+        formed.feeSymbol = this.#feeSymbol;
+        formed.properties = this.#properties;
+        return formed;
     }
 }
 
