@@ -88,7 +88,11 @@ class Issuer {
         if (instances.length === 0) {
             throw new Error("instances cannot be empty.");
         }
+        if (instances.length > 30){
+            throw new Error("max of 30 instances can be issued at once");
+        }
         let instancesFormatted = [];
+        let sendJSON = []
         for (let i in instances) {
             let nft = instances[i];
             try {
@@ -96,13 +100,16 @@ class Issuer {
             } catch(err){
                 throw new Error(err);
             }
-            
+            if (instancesFormatted.length === 10){
+                let contract = {
+                    "contractName": "nft",
+                    "contractAction": "issueMultiple",
+                    "contractPayload": {"instances": instancesFormatted}
+                };
+                sendJSON.push(contract);
+                instancesFormatted = []
+            }
         }
-        let sendJSON = {
-            "contractName": "nft",
-            "contractAction": "issueMultiple",
-            "contractPayload": {"instances": instancesFormatted}
-        };
         this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, "ssc-mainnet-hive", JSON.stringify(sendJSON), (err, result) => {
             if (err) {
                 this.nodeError();
