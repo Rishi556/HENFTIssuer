@@ -7,6 +7,8 @@ class Issuer {
     errorsToSwitch;
     /** Current error count */
     errorCount = 0;
+    /** Smart Contract Network id */
+    networkID;
 
     /** Username of issuing account */
     issuingUserName;
@@ -20,17 +22,21 @@ class Issuer {
      * Constructor
      * @param {Array<String>} nodesToUse Array of nodes to use
      * @param {Number} errorCountToSwitch Integer of how many errors to switch after
+     * @param {String} networkID Custom Json id of smart contract
      * @param {String} username Username of issuing account
      * @param {String} privateActiveKey Private Active Key of issuing account
      * @returns {boolean} If initialized
      * @throws {Error} Throws error if any error
      */
-    constructor(nodesToUse, errorCountToSwitch, username, privateActiveKey) {
+    constructor(nodesToUse, errorCountToSwitch, networkID, username, privateActiveKey) {
         if (typeof nodesToUse !== "object" || nodesToUse.length === 0) {
             throw new Error("nodesToUse must be an array of nodes.");
         }
         if (typeof errorCountToSwitch !== "number" || Math.abs(errorCountToSwitch) !== errorCountToSwitch || !Number.isInteger(errorCountToSwitch) || errorCountToSwitch === 0) {
             throw new Error("errorCountToSwitch should be a positive integer.");
+        }
+        if (networkID === null || networkID === "") {
+            throw new Error("networkID is invalid.");
         }
         if (username === null || username === "") {
             throw new Error("username is invalid.");
@@ -40,6 +46,7 @@ class Issuer {
         }
         this.nodes = nodesToUse;
         this.errorsToSwitch = errorCountToSwitch;
+        this.networkID = networkID;
         this.issuingUserName = username;
         this.issuingPrivateActiveKey = privateActiveKey;
         this.init = true;
@@ -110,14 +117,16 @@ class Issuer {
                 instancesFormatted = [];
             }
         }
-        let contract = {
-            "contractName": "nft",
-            "contractAction": "issueMultiple",
-            "contractPayload": { "instances": instancesFormatted }
-        };
-        sendJSON.push(contract);
-
-        this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, "ssc-mainnet-hive", JSON.stringify(sendJSON), (err, result) => {
+        if (instancesFormatted.size){
+            let contract = {
+                "contractName": "nft",
+                "contractAction": "issueMultiple",
+                "contractPayload": { "instances": instancesFormatted }
+            };
+            sendJSON.push(contract);
+        }
+        
+        this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, networkID, JSON.stringify(sendJSON), (err, result) => {
             if (err) {
                 this.nodeError();
                 throw new Error(err);
