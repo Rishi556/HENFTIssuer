@@ -117,7 +117,7 @@ class Issuer {
                 instancesFormatted = [];
             }
         }
-        if (instancesFormatted.size){
+        if (instancesFormatted.length !== 0){
             let contract = {
                 "contractName": "nft",
                 "contractAction": "issueMultiple",
