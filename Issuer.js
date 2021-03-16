@@ -126,7 +126,7 @@ class Issuer {
             sendJSON.push(contract);
         }
         
-        this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, networkID, JSON.stringify(sendJSON), (err, result) => {
+        this.hive.broadcast.customJson(this.issuingPrivateActiveKey, [this.issuingUserName], null, this.networkID, JSON.stringify(sendJSON), (err, result) => {
             if (err) {
                 this.nodeError();
                 throw new Error(err);
