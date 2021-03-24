@@ -90,7 +90,7 @@ class Issuer {
      * @param {Array<NFTInstance>} instances Array of NFTInstances
      * @throws {Error} Error
      */
-    issueNFTs(instances) {
+    issueNFTs(instances, memo = null) {
         this.checkInit();
         if (instances.length === 0) {
             throw new Error("instances cannot be empty.");
@@ -113,6 +113,9 @@ class Issuer {
                     "contractAction": "issueMultiple",
                     "contractPayload": { "instances": instancesFormatted }
                 };
+                if (memo){
+                    contract.memo = memo
+                }
                 sendJSON.push(contract);
                 instancesFormatted = [];
             }
@@ -123,6 +126,9 @@ class Issuer {
                 "contractAction": "issueMultiple",
                 "contractPayload": { "instances": instancesFormatted }
             };
+            if (memo){
+                contract.memo = memo
+            }
             sendJSON.push(contract);
         }
         
