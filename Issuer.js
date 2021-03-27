@@ -114,7 +114,7 @@ class Issuer {
                     "contractPayload": { "instances": instancesFormatted }
                 };
                 if (memo){
-                    contract.memo = memo
+                    contract.contractPayload.memo = memo
                 }
                 sendJSON.push(contract);
                 instancesFormatted = [];
@@ -127,7 +127,7 @@ class Issuer {
                 "contractPayload": { "instances": instancesFormatted }
             };
             if (memo){
-                contract.memo = memo
+                contract.contractPayload.memo = memo
             }
             sendJSON.push(contract);
         }
